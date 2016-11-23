@@ -1,0 +1,104 @@
+﻿<Window x:Class="AirspaceFixerSample.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:asf="clr-namespace:AirspaceFixer;assembly=AirspaceFixer"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:AirspaceFixerSample"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        Title="MainWindow"
+        Width="1000"
+        mc:Ignorable="d">
+
+    <Window.DataContext>
+        <local:MainWindowViewModel />
+    </Window.DataContext>
+
+    <Window.Resources>
+
+        <sys:Boolean x:Key="BooleanTrue">true</sys:Boolean>
+        <sys:Boolean x:Key="BooleanFalse">false</sys:Boolean>
+
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Button x:Name="btnBack"
+                    Width="100"
+                    VerticalAlignment="Stretch"
+                    Click="btnBack_Click"
+                    Content="Back"
+                    DockPanel.Dock="Left" />
+            <Button x:Name="btnForward"
+                    Grid.Column="1"
+                    Width="100"
+                    VerticalAlignment="Stretch"
+                    Click="btnForward_Click"
+                    Content="Forward"
+                    DockPanel.Dock="Right" />
+
+            <TextBox Name="txtUrl"
+                     Grid.Column="2"
+                     VerticalContentAlignment="Center"
+                     FontSize="16"
+                     KeyUp="txtUrl_KeyUp"
+                     Padding="10,0" />
+
+            <Button Grid.Column="3"
+                    Width="100"
+                    VerticalAlignment="Stretch"
+                    Command="{Binding ShowDialogCommand}"
+                    CommandParameter="{StaticResource BooleanTrue}"
+                    Content="Settings"
+                    DockPanel.Dock="Right" />
+        </Grid>
+
+        <asf:AirspacePanel Grid.Row="1"
+                           FixAirspace="{Binding FixAirspace}">
+            <WebBrowser x:Name="Browser"
+                        Navigating="Browser_Navigating" />
+        </asf:AirspacePanel>
+
+        <Grid Grid.RowSpan="2"
+              Background="Transparent"
+              Visibility="{Binding ShowDialog,
+                                   Converter={StaticResource BoolToVis}}">
+
+            <Grid Background="#CC000000" />
+
+            <Grid Background="LightGray" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="120" />
+                </Grid.RowDefinitions>
+
+                <Label Content="Dialog Over Airspace" FontSize="20" Padding="40,20" HorizontalAlignment="Center" />
+
+                <Button Width="100"
+                        Grid.Row="1"
+                        Height="50"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Command="{Binding ShowDialogCommand}"
+                        CommandParameter="{StaticResource BooleanFalse}"
+                        Content="Close" />
+            </Grid>
+
+        </Grid>
+
+    </Grid>
+</Window>
