@@ -24,54 +24,27 @@
     </Window.Resources>
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="40" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
 
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+        <TabControl>
+            <TabControl.Items>
+                <TabItem Header="Browser">
+                    <local:WebBrowserView />
+                </TabItem>
 
-            <Button x:Name="btnBack"
-                    Width="100"
-                    VerticalAlignment="Stretch"
-                    Click="btnBack_Click"
-                    Content="Back"
-                    DockPanel.Dock="Left" />
-            <Button x:Name="btnForward"
-                    Grid.Column="1"
-                    Width="100"
-                    VerticalAlignment="Stretch"
-                    Click="btnForward_Click"
-                    Content="Forward"
-                    DockPanel.Dock="Right" />
+                <TabItem Header="Other Item">
+                    <Grid>
+                        <Button Width="100"
+                                Height="50"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Command="{Binding ShowDialogCommand}"
+                                CommandParameter="{StaticResource BooleanTrue}"
+                                Content="ShowDialog" />
+                    </Grid>
+                </TabItem>
 
-            <TextBox Name="txtUrl"
-                     Grid.Column="2"
-                     VerticalContentAlignment="Center"
-                     FontSize="16"
-                     KeyUp="txtUrl_KeyUp"
-                     Padding="10,0" />
-
-            <Button Grid.Column="3"
-                    Width="100"
-                    VerticalAlignment="Stretch"
-                    Command="{Binding ShowDialogCommand}"
-                    CommandParameter="{StaticResource BooleanTrue}"
-                    Content="Settings"
-                    DockPanel.Dock="Right" />
-        </Grid>
-
-        <asf:AirspacePanel Grid.Row="1"
-                           FixAirspace="{Binding FixAirspace}">
-            <WebBrowser x:Name="Browser"
-                        Navigating="Browser_Navigating" />
-        </asf:AirspacePanel>
+            </TabControl.Items>
+        </TabControl>
 
         <Grid Grid.RowSpan="2"
               Background="Transparent"
@@ -80,16 +53,21 @@
 
             <Grid Background="#CC000000" />
 
-            <Grid Background="LightGray" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  Background="LightGray">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="120" />
                 </Grid.RowDefinitions>
 
-                <Label Content="Dialog Over Airspace" FontSize="20" Padding="40,20" HorizontalAlignment="Center" />
+                <Label HorizontalAlignment="Center"
+                       Content="Dialog Over Airspace"
+                       FontSize="20"
+                       Padding="40,20" />
 
-                <Button Width="100"
-                        Grid.Row="1"
+                <Button Grid.Row="1"
+                        Width="100"
                         Height="50"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
@@ -99,6 +77,5 @@
             </Grid>
 
         </Grid>
-
     </Grid>
 </Window>

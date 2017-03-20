@@ -52,7 +52,7 @@ namespace AirspaceFixer
         {
             var panel = d as AirspacePanel;
 
-            if (panel == null || panel.ActualWidth == 0 || panel.ActualHeight == 0)
+            if (panel == null || panel.ActualWidth == 0 || panel.ActualHeight == 0 || PresentationSource.FromVisual(panel) == null)
                 return;
 
             if ((bool)e.NewValue)

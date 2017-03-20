@@ -20,34 +20,6 @@ namespace AirspaceFixerSample
         public MainWindow()
         {
             InitializeComponent();
-            Loaded += MainWindow_Loaded;
-        }
-
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            Browser.Navigate("http://www.google.com");
-        }
-
-        private void btnForward_Click(object sender, RoutedEventArgs e)
-        {
-            if (Browser != null && Browser.CanGoForward)
-                Browser.GoForward();
-        }
-
-        private void btnBack_Click(object sender, RoutedEventArgs e)
-        {
-            if (Browser != null && Browser.CanGoBack)
-                Browser.GoBack();
-        }
-
-        private void Browser_Navigating(object sender, System.Windows.Navigation.NavigatingCancelEventArgs e)
-        {
-            txtUrl.Text = e.Uri.OriginalString;
-        }
-
-        private void txtUrl_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            Browser.Navigate(txtUrl.Text);
         }
     }
 }
