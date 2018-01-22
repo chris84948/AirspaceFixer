@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -10,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
@@ -34,6 +36,7 @@ namespace AirspaceFixer
 
         private Image _airspaceScreenshot;
         private ContentControl _airspaceContent;
+        private float _scalingFactor;
 
         static AirspacePanel()
         {
@@ -46,6 +49,7 @@ namespace AirspaceFixer
 
             _airspaceContent = GetTemplateChild("PART_AirspaceContent") as ContentControl;
             _airspaceScreenshot = GetTemplateChild("PART_AirspaceScreenshot") as Image;
+            Loaded += (_, __) => GetScalingFactor();
         }
 
         private static void OnFixAirspaceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -72,10 +76,10 @@ namespace AirspaceFixer
         private void CreateScreenshotFromContent()
         {
             Point upperLeftPoint = _airspaceContent.PointToScreen(new Point(0, 0));
-            var bounds = new System.Drawing.Rectangle((int)upperLeftPoint.X,
-                                                      (int)upperLeftPoint.Y,
-                                                      (int)_airspaceContent.RenderSize.Width,
-                                                      (int)_airspaceContent.RenderSize.Height);
+            var bounds = new System.Drawing.Rectangle((int)(upperLeftPoint.X * _scalingFactor),
+                                                      (int)(upperLeftPoint.Y * _scalingFactor),
+                                                      (int)(_airspaceContent.RenderSize.Width * _scalingFactor),
+                                                      (int)(_airspaceContent.RenderSize.Height * _scalingFactor));
 
             using (var bitmap = new System.Drawing.Bitmap((int)bounds.Width, (int)bounds.Height))
             {
@@ -88,6 +92,21 @@ namespace AirspaceFixer
 
                 _airspaceScreenshot.Source = GetImageSourceFromBitmap(bitmap);
             }
+        }
+
+        // https://stackoverflow.com/questions/5977445/how-to-get-windows-display-settings
+        [DllImport("gdi32.dll")]
+        static extern int GetDeviceCaps(IntPtr hdc, int nIndex);
+        private void GetScalingFactor()
+        {
+            var g = System.Drawing.Graphics.FromHwnd(IntPtr.Zero);
+            IntPtr desktop = g.GetHdc();
+            int LogicalScreenHeight = GetDeviceCaps(desktop, 10);
+            int PhysicalScreenHeight = GetDeviceCaps(desktop, 117);
+
+            float ScreenScalingFactor = (float)PhysicalScreenHeight / (float)LogicalScreenHeight;
+
+            _scalingFactor = ScreenScalingFactor; // 1.25 = 125%
         }
 
         public ImageSource GetImageSourceFromBitmap(System.Drawing.Bitmap bitmap)
