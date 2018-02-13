@@ -43,13 +43,17 @@ namespace AirspaceFixer
             DefaultStyleKeyProperty.OverrideMetadata(typeof(AirspacePanel), new FrameworkPropertyMetadata(typeof(AirspacePanel)));
         }
 
+        public AirspacePanel()
+        {
+            Loaded += (_, __) => GetScalingFactor();
+        }
+
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
 
             _airspaceContent = GetTemplateChild("PART_AirspaceContent") as ContentControl;
             _airspaceScreenshot = GetTemplateChild("PART_AirspaceScreenshot") as Image;
-            Loaded += (_, __) => GetScalingFactor();
         }
 
         private static void OnFixAirspaceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
