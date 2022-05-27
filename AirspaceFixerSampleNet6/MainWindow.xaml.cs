@@ -1,26 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
+﻿using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 
-namespace AirspaceFixerSample
+namespace Test2
 {
     /// <summary>
-    /// Interaction logic for WebBrowserView.xaml
+    /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class WebBrowserView : UserControl
+    public partial class MainWindow : Window
     {
-        public WebBrowserView()
+        public MainWindow()
         {
             InitializeComponent();
             Loaded += WebBrowserView_Loaded;
@@ -43,14 +32,26 @@ namespace AirspaceFixerSample
                 Browser.GoBack();
         }
 
-        private void Browser_Navigating(object sender, System.Windows.Navigation.NavigatingCancelEventArgs e)
+        private void Browser_Navigating(object sender, NavigatingCancelEventArgs e)
         {
             txtUrl.Text = e.Uri.OriginalString;
         }
 
-        private void txtUrl_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        private void txtUrl_KeyUp(object sender, KeyEventArgs e)
         {
             Browser.Navigate(txtUrl.Text);
+        }
+
+        private void btnSettings_Click(object sender, RoutedEventArgs e)
+        {
+            airspacePanel.FixAirspace = true;
+            gridDialog.Visibility = Visibility.Visible;
+        }
+
+        private void btnCloseDialog_Click(object sender, RoutedEventArgs e)
+        {
+            airspacePanel.FixAirspace = false;
+            gridDialog.Visibility = Visibility.Hidden;
         }
     }
 }
