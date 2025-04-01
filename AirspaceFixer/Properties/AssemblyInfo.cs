@@ -51,5 +51,10 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.6")]
-[assembly: AssemblyFileVersion("1.0.6")]
+[assembly: AssemblyVersion("1.1.0")]
+[assembly: AssemblyFileVersion("1.1.0")]
+
+#if NET6_0_OR_GREATER
+[assembly: System.Runtime.Versioning.TargetPlatform("Windows7.0")]
+[assembly: System.Runtime.Versioning.SupportedOSPlatform("Windows7.0")]
+#endif

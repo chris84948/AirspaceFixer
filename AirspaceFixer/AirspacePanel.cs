@@ -1,21 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing.Imaging;
+﻿using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace AirspaceFixer
 {
@@ -26,64 +14,73 @@ namespace AirspaceFixer
                                         typeof(bool),
                                         typeof(AirspacePanel),
                                         new FrameworkPropertyMetadata(false, new PropertyChangedCallback(OnFixAirspaceChanged)));
-
         public bool FixAirspace
         {
             get { return (bool)GetValue(FixAirspaceProperty); }
             set { SetValue(FixAirspaceProperty, value); }
         }
 
-
-        private Image _airspaceScreenshot;
-        private ContentControl _airspaceContent;
-        private float _scalingFactor;
+        private Image airspaceScreenshot;
+        private ContentControl airspaceContent;
 
         static AirspacePanel()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(AirspacePanel), new FrameworkPropertyMetadata(typeof(AirspacePanel)));
         }
 
-        public AirspacePanel()
-        {
-            Loaded += (_, __) => GetScalingFactor();
-        }
-
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
 
-            _airspaceContent = GetTemplateChild("PART_AirspaceContent") as ContentControl;
-            _airspaceScreenshot = GetTemplateChild("PART_AirspaceScreenshot") as Image;
+            airspaceContent = GetTemplateChild("PART_AirspaceContent") as ContentControl;
+            airspaceScreenshot = GetTemplateChild("PART_AirspaceScreenshot") as Image;
+        }
+
+        private void AirspacePanel_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            // On resize, make sure to update the image
+            if (FixAirspace)
+                FixAirspaceShared(true);
         }
 
         private static void OnFixAirspaceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var panel = d as AirspacePanel;
+            if (d is AirspacePanel panel)
+                panel.FixAirspaceShared((bool)e.NewValue);
+        }
 
-            if (panel == null || panel.ActualWidth == 0 || panel.ActualHeight == 0 || PresentationSource.FromVisual(panel) == null)
+        private void FixAirspaceShared(bool fix)
+        {
+            if (ActualWidth == 0 || ActualHeight == 0 || PresentationSource.FromVisual(this) == null)
                 return;
 
-            if ((bool)e.NewValue)
+            if (fix)
             {
-                panel.CreateScreenshotFromContent();
-                panel._airspaceContent.Visibility = Visibility.Hidden;
-                panel._airspaceScreenshot.Visibility = Visibility.Visible;
+                CreateScreenshotFromContent();
+                airspaceContent.Visibility = Visibility.Hidden;
+                airspaceScreenshot.Visibility = Visibility.Visible;
             }
             else
             {
-                panel._airspaceContent.Visibility = Visibility.Visible;
-                panel._airspaceScreenshot.Visibility = Visibility.Hidden;
-                panel._airspaceScreenshot.Source = null;
+                airspaceContent.Visibility = Visibility.Visible;
+                airspaceScreenshot.Visibility = Visibility.Hidden;
+                airspaceScreenshot.Source = null;
             }
         }
 
         private void CreateScreenshotFromContent()
         {
-            Point upperLeftPoint = _airspaceContent.PointToScreen(new Point(0, 0));
-            var bounds = new System.Drawing.Rectangle((int)(upperLeftPoint.X * _scalingFactor),
-                                                      (int)(upperLeftPoint.Y * _scalingFactor),
-                                                      (int)(_airspaceContent.RenderSize.Width * _scalingFactor),
-                                                      (int)(_airspaceContent.RenderSize.Height * _scalingFactor));
+            // https://stackoverflow.com/questions/1918877/how-can-i-get-the-dpi-in-wpf
+            double scalingFactor = PresentationSource.FromVisual(this)?.CompositionTarget?.TransformToDevice.M11 ?? 1.0;
+
+            Point upperLeftPoint = airspaceContent.PointToScreen(new Point(0, 0));
+            var bounds = new System.Drawing.Rectangle((int)(upperLeftPoint.X * scalingFactor),
+                                                      (int)(upperLeftPoint.Y * scalingFactor),
+                                                      (int)(airspaceContent.RenderSize.Width * scalingFactor),
+                                                      (int)(airspaceContent.RenderSize.Height * scalingFactor));
+
+            if (bounds.Width == 0 || bounds.Height == 0)
+                return;
 
             using (var bitmap = new System.Drawing.Bitmap((int)bounds.Width, (int)bounds.Height))
             {
@@ -94,23 +91,8 @@ namespace AirspaceFixer
                                      new System.Drawing.Size((int)bounds.Width, (int)bounds.Height));
                 }
 
-                _airspaceScreenshot.Source = GetImageSourceFromBitmap(bitmap);
+                airspaceScreenshot.Source = GetImageSourceFromBitmap(bitmap);
             }
-        }
-
-        // https://stackoverflow.com/questions/5977445/how-to-get-windows-display-settings
-        [DllImport("gdi32.dll")]
-        static extern int GetDeviceCaps(IntPtr hdc, int nIndex);
-        private void GetScalingFactor()
-        {
-            var g = System.Drawing.Graphics.FromHwnd(IntPtr.Zero);
-            IntPtr desktop = g.GetHdc();
-            int LogicalScreenHeight = GetDeviceCaps(desktop, 10);
-            int PhysicalScreenHeight = GetDeviceCaps(desktop, 117);
-
-            float ScreenScalingFactor = (float)PhysicalScreenHeight / (float)LogicalScreenHeight;
-
-            _scalingFactor = ScreenScalingFactor; // 1.25 = 125%
         }
 
         public ImageSource GetImageSourceFromBitmap(System.Drawing.Bitmap bitmap)

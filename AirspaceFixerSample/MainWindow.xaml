@@ -77,6 +77,26 @@
                     </Grid>
                 </TabItem>
 
+                <TabItem Header="Resizable Item">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Button Width="100"
+                                Height="50"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Click="ButtonResizable_Click"
+                                Content="ShowDialog" />
+
+                        <asf:AirspacePanel x:Name="airspacePanel2"
+                                           Grid.Column="1">
+                            <WebBrowser x:Name="Browser2" />
+                        </asf:AirspacePanel>
+                    </Grid>
+                </TabItem>
             </TabControl.Items>
         </TabControl>
 

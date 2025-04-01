@@ -7,40 +7,30 @@
     <UseWPF>true</UseWPF>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.0.6</Version>
+    <Version>1.1.0</Version>
     <Company>ChrisBJohnsonDev</Company>
     <Authors>ChrisBJohnsonDev</Authors>
     <Description>AirspacePanel fixes all Airspace issues with WPF-hosted Winforms.</Description>
     <PackageProjectUrl>https://github.com/chris84948/AirspaceFixer</PackageProjectUrl>
     <RepositoryUrl>https://github.com/chris84948/AirspaceFixer</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>Upgraded to build for both NET 6 and NET Framework 4.5.2+</PackageReleaseNotes>
-    <PackageLicenseFile>C:\Github\c#\AirspaceFixer\LICENSE</PackageLicenseFile>
+    <PackageReleaseNotes>Removing unnecessary code</PackageReleaseNotes>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageReadmeFile>Readme.md</PackageReadmeFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="LICENSE.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
-  <PropertyGroup>
-    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-  </PropertyGroup>
   <ItemGroup>
-  	<None Include="LICENSE.txt" Pack="true" PackagePath="" />
-  </ItemGroup>
-  <PropertyGroup>
-    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-  </PropertyGroup>
-  <ItemGroup>
-  	<None Include="License.txt" Pack="true" PackagePath="" />
+    <None Include="LICENSE.txt" Pack="true" PackagePath="" />
+    <None Include="Readme.md" Pack="true" PackagePath="" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.326103">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.7" />
   </ItemGroup>
 </Project>

@@ -18,6 +18,7 @@ namespace AirspaceFixerSample
         private void WebBrowserView_Loaded(object sender, RoutedEventArgs e)
         {
             Browser.Navigate("http://www.google.com");
+            Browser2.Navigate("http://www.google.com");
         }
 
         private void btnForward_Click(object sender, RoutedEventArgs e)
@@ -51,7 +52,14 @@ namespace AirspaceFixerSample
         private void btnCloseDialog_Click(object sender, RoutedEventArgs e)
         {
             airspacePanel.FixAirspace = false;
+            airspacePanel2.FixAirspace = false;
             gridDialog.Visibility = Visibility.Hidden;
+        }
+
+        private void ButtonResizable_Click(object sender, RoutedEventArgs e)
+        {
+            airspacePanel2.FixAirspace = true;
+            gridDialog.Visibility = Visibility.Visible;
         }
     }
 }
